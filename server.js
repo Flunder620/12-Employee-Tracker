@@ -1,5 +1,5 @@
 const express = require("express");
-// Import and require mysql2
+
 const mysql = require("mysql2");
 
 const inquirer = require("inquirer");
@@ -11,13 +11,11 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// Connect to database
+// Database
 const db = mysql.createConnection(
   {
     host: "localhost",
-    // MySQL username,
     user: "root",
-    // MySQL password
     password: "Password1",
     database: "classlist_db",
   },
@@ -29,7 +27,7 @@ db.query("SELECT * FROM students", function (err, results) {
   console.log(results);
 });
 
-// Default response for any other request (Not Found)
+// Request, Response
 app.use((req, res) => {
   res.status(404).end();
 });
