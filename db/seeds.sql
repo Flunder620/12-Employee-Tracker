@@ -12,9 +12,9 @@ VALUES ("Accountant Manager", 110000, 1),
        ("Lawyer", 100000, 3);
 
 INSERT INTO employee(first_name, last_name, role_id, manager_id)
-VALUES ("John", "Smith",),
-       ("Jane", "Doe"),
-       ("Paul", "Buchheit"),
-       ("Michael", "Widenius"),
-       ("Harvey", "Specter"),
-       ("Michael", "Ross");
+VALUES ("John", "Smith", 1, NULL),
+       ("Jane", "Doe", 2, 1),
+       ("Paul", "Buchheit", 3, NULL),
+       ("Michael", "Widenius", 4, 3),
+       ("Harvey", "Specter", 5, NULL),
+       ("Michael", "Ross", 6, 5);
