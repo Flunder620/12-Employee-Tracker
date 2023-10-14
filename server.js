@@ -61,96 +61,119 @@ function addDepartment() {
     .then((response) => {
       db.query("INSERT INTO department (name) VALUES (?)", response.department);
     });
-    mainMenu()
+  mainMenu();
 }
 //Add role function
-async function addRole(){
-  const departmentData = await db.promise().query("SELECT * FROM department")
-  const departmentChoices = departmentData[0].map(({id, name}) =>({name: name, value: id}))
-  const response = await inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "role",
-        message: "What is the name of the role you want to add?",
-      },
-      {
-        type: "list",
-        name: "roleDepartment",
-        message: "What department does this role belong to?",
-        choices: departmentChoices
-      },
-      {
-        type: "input",
-        name: "roleSalary",
-        message: "What is the salary for this role?",
-      }
-    ])
-    const data = db.promise().query("INSERT INTO role (title, salary, department_id) VALUES (?,?,?)", [response.role, response.roleSalary, response.roleDepartment])
-    console.log(data)
-    mainMenu()
+async function addRole() {
+  const departmentData = await db.promise().query("SELECT * FROM department");
+  const departmentChoices = departmentData[0].map(({ id, name }) => ({
+    name: name,
+    value: id,
+  }));
+  const response = await inquirer.prompt([
+    {
+      type: "input",
+      name: "role",
+      message: "What is the name of the role you want to add?",
+    },
+    {
+      type: "list",
+      name: "roleDepartment",
+      message: "What department does this role belong to?",
+      choices: departmentChoices,
+    },
+    {
+      type: "input",
+      name: "roleSalary",
+      message: "What is the salary for this role?",
+    },
+  ]);
+  const data = db
+    .promise()
+    .query("INSERT INTO role (title, salary, department_id) VALUES (?,?,?)", [
+      response.role,
+      response.roleSalary,
+      response.roleDepartment,
+    ]);
+  console.log(data);
+  mainMenu();
 }
-
-async function addEmployee(){
-  const roleData = await db.promise().query("SELECT * FROM role")
-  const roleChoices = roleData[0].map(({id, title}) =>({name: title, value: id}))
-  const response = await inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "firstName",
-        message: "What is the first name of the employee you want to add?",
-      },
-      {
-        type: "input",
-        name: "lastName",
-        message: "What is the last name of the employee you want to add?",
-      },
-      {
-        type: "list",
-        name: "role",
-        message: "What role is this employee?",
-        choices: roleChoices
-      },
-      {
-        type: "input",
-        name: "manager",
-        message: "Who is ther manager?",
-      }
-    ])
-    const data = db.promise().query("INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)", [response.firstName, response.lastName, response.role, response.manager])
-    console.log(data)
-    mainMenu()
+//Adding employee
+async function addEmployee() {
+  const roleData = await db.promise().query("SELECT * FROM role");
+  const roleChoices = roleData[0].map(({ id, title }) => ({
+    name: title,
+    value: id,
+  }));
+  const response = await inquirer.prompt([
+    {
+      type: "input",
+      name: "firstName",
+      message: "What is the first name of the employee you want to add?",
+    },
+    {
+      type: "input",
+      name: "lastName",
+      message: "What is the last name of the employee you want to add?",
+    },
+    {
+      type: "list",
+      name: "role",
+      message: "What role is this employee?",
+      choices: roleChoices,
+    },
+    {
+      type: "input",
+      name: "manager",
+      message: "Who is ther manager?",
+    },
+  ]);
+  const data = db
+    .promise()
+    .query(
+      "INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)",
+      [response.firstName, response.lastName, response.role, response.manager]
+    );
+  console.log(data);
+  mainMenu();
 }
-//Inquirer prompt
+//Update employee function
+function updateEmployee(){
+  
+}
+//Inquirer prompts
 function mainMenu() {
   inquirer.prompt(questions).then((response) => {
     switch (response.choice) {
       case "View all departments":
         db.query("SELECT * FROM department", function (err, results) {
           console.table(results);
-          mainMenu()
+          mainMenu();
         });
         break;
       case "View all roles":
         db.query("SELECT * FROM role", function (err, results) {
           console.table(results);
-          mainMenu()
+          mainMenu();
         });
         break;
       case "Add a department":
-        addDepartment();  
+        addDepartment();
         break;
       case "Add a role":
-        addRole()
+        addRole();
         break;
       case "Add an employee":
         addEmployee();
         break;
+      case "Update an employee role":
+        updateEmployee();
+        break;
     }
   });
 }
-mainMenu()
+
+mainMenu();
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
