@@ -7,26 +7,13 @@ const inquirer = require("inquirer");
 const PORT = process.env.PORT || 3001;
 const app = express();
 
+// Inquirer questions
 const questions = [
   {
-      type: "input",
-      name: "text",
-      message: "Enter your text: "
-  },
-  {
-      type: "input",
-      name: "tcolor",
-      message: "What color what you like your text?(Red, Green, Blue)"
-  },
-  {
-      type: "input",
-      name: "shape",
-      message: "Which shape would you like?(Circle, Triangle, or Square)"
-  },
-  {
-      type: "input",
-      name: "scolor",
-      message: "What color would you like your shape?(Red, Green, Blue)"
+      type: "list",
+      name: "choice",
+      message: "What would you like to do?",
+      choices: ["view all departments", "View all roles", "Add a department", "Add a role", "add an employee", "update an employee role"]
   }
 ];
 
@@ -40,13 +27,13 @@ const db = mysql.createConnection(
     host: "localhost",
     user: "root",
     password: "Password1",
-    database: "classlist_db",
+    database: "employees_db",
   },
-  console.log(`Connected to the classlist_db database.`)
+  console.log(`Connected to the employees_db database.`)
 );
 
 // Query database
-db.query("SELECT * FROM students", function (err, results) {
+db.query("SELECT * FROM ", function (err, results) {
   console.log(results);
 });
 
