@@ -14,12 +14,12 @@ const questions = [
     name: "choice",
     message: "What would you like to do?",
     choices: [
-      "view all departments",
+      "View all departments",
       "View all roles",
       "Add a department",
       "Add a role",
-      "add an employee",
-      "update an employee role",
+      "Add an employee",
+      "Update an employee role",
     ],
   },
 ];
@@ -48,7 +48,7 @@ db.query("SELECT * FROM ", function (err, results) {
 app.use((req, res) => {
   res.status(404).end();
 });
-
+// Add department function
 function addDepartment() {
   inquirer
     .prompt([
@@ -63,7 +63,7 @@ function addDepartment() {
     });
     mainMenu()
 }
-
+//Add role function
 async function addRole(){
   const departmentData = await db.promise().query("SELECT * FROM department")
   const departmentChoices = departmentData[0].map(({id, name}) =>({name: name, value: id}))
@@ -90,11 +90,43 @@ async function addRole(){
     console.log(data)
     mainMenu()
 }
+
+async function addEmployee(){
+  const roleData = await db.promise().query("SELECT * FROM role")
+  const roleChoices = roleData[0].map(({id, title}) =>({name: title, value: id}))
+  const response = await inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "firstName",
+        message: "What is the first name of the employee you want to add?",
+      },
+      {
+        type: "input",
+        name: "lastName",
+        message: "What is the last name of the employee you want to add?",
+      },
+      {
+        type: "list",
+        name: "role",
+        message: "What role is this employee?",
+        choices: roleChoices
+      },
+      {
+        type: "input",
+        name: "manager",
+        message: "Who is ther manager?",
+      }
+    ])
+    const data = db.promise().query("INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)", [response.firstName, response.lastName, response.role, response.manager])
+    console.log(data)
+    mainMenu()
+}
 //Inquirer prompt
 function mainMenu() {
   inquirer.prompt(questions).then((response) => {
     switch (response.choice) {
-      case "view all departments":
+      case "View all departments":
         db.query("SELECT * FROM department", function (err, results) {
           console.table(results);
           mainMenu()
@@ -111,6 +143,9 @@ function mainMenu() {
         break;
       case "Add a role":
         addRole()
+        break;
+      case "Add an employee":
+        addEmployee();
         break;
     }
   });
