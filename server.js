@@ -125,20 +125,20 @@ async function addEmployee() {
     {
       type: "input",
       name: "manager",
-      message: "Who is ther manager?",
+      message: "Who is there manager?",
     },
   ]);
   const data = db
     .promise()
     .query(
-      "INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)",
+      "INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES (?,?,?,?,?)",
       [response.firstName, response.lastName, response.role, response.manager]
     );
   console.log(data);
   mainMenu();
 }
 //Update employee function
-function updateEmployee(){
+async function updateEmployee(){
   
 }
 //Inquirer prompts
